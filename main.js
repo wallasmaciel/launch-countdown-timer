@@ -35,13 +35,13 @@ const changeCountdown = (el, text) => {
     divTop.innerHTML = `<span>${text}</span>`;
   });
 
-  divTop.addEventListener("animationend", divTop.remove());
+  divTop.addEventListener("animationend", () => divTop.remove());
 
   divBottom.addEventListener("animationstart", () => {
     divBottom.innerHTML = `<span>${text}</span>`;
   });
   
-  divBottom.addEventListener("animationend", divBottom.remove());
+  divBottom.addEventListener("animationend", () => divBottom.remove());
   // 
   el.parentNode.appendChild(divTop)
   el.parentNode.appendChild(divBottom)
