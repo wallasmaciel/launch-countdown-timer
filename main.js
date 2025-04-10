@@ -19,7 +19,6 @@ const handlePassageTime = () => {
   changeCountdown(spans[2], `${minutes}`.padStart(2, "0"))
   changeCountdown(spans[3], `${seconds}`.padStart(2, "0"))
 }
-const intervalPassageTime = setInterval(handlePassageTime, 1000)
 
 const changeCountdown = (el, text) => {
   if (el.innerText == text) return
@@ -32,17 +31,49 @@ const changeCountdown = (el, text) => {
   divBottom.classList.add("bottom")
   
   divTop.addEventListener("animationstart", () => {
-    divTop.innerHTML = `<span>${text}</span>`;
-  });
+    divTop.innerHTML = `<span>${text}</span>`
+  })
 
-  divTop.addEventListener("animationend", () => divTop.remove());
+  divTop.addEventListener("animationend", () => divTop.remove())
 
   divBottom.addEventListener("animationstart", () => {
-    divBottom.innerHTML = `<span>${text}</span>`;
-  });
+    divBottom.innerHTML = `<span>${text}</span>`
+  })
   
-  divBottom.addEventListener("animationend", () => divBottom.remove());
+  divBottom.addEventListener("animationend", () => divBottom.remove())
   // 
   el.parentNode.appendChild(divTop)
   el.parentNode.appendChild(divBottom)
 }
+
+let intervalPassageTime
+const initIntervalPassageTime = () => {
+	intervalPassageTime = setInterval(handlePassageTime, 1000)
+}
+const clearIntervalPassageTime = () => {
+	if (!!intervalPassageTime) clearInterval(intervalPassageTime)
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+	const handleVisibilityChange = () => {
+		document.hidden
+			? pageHiddenAction()
+			: pageVisibleAction()
+	}
+	// 
+	if (typeof document.hidden !== 'undefined') {
+	  document.addEventListener('visibilitychange', handleVisibilityChange)
+	}
+
+	const pageHiddenAction = clearIntervalPassageTime
+	const pageVisibleAction = () => {
+    handlePassageTime()
+    initIntervalPassageTime()
+  }
+
+	window.addEventListener('beforeunload', e => {
+		clearIntervalPassageTime()
+	})
+	// init when DOM finish loaded
+	initIntervalPassageTime()
+})
